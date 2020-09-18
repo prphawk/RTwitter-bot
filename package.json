@@ -1,0 +1,19 @@
+{
+  "name": "essek-bot",
+  "version": "1.0.1",
+  "description": "A simple bot to retweet strings",
+  "repository": "https://github.com/prphawk/essek_bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.ts",
+    "test": "jest"
+  },
+  "author": "Mayra Camargo Cademartori",
+  "dependencies": {
+    "dotenv": "^6.0.0",
+    "twit": "^2.2.10"
+  },
+  "devDependencies": {
+    "jest": "^26.0.1"
+  }
+}
