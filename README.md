@@ -1,6 +1,6 @@
 # Twitter Bot to spread my Critical Role Agenda
 
-[![CircleCI](https://circleci.com/gh/jcserracampos/100diasdecodigo_bot/tree/master.svg?style=svg)](https://circleci.com/gh/jcserracampos/100diasdecodigo_bot/tree/master)
+[Baseado no repositório de jcserracampos](https://circleci.com/gh/jcserracampos/100diasdecodigo_bot/tree/master)
 
 ## Como utilizar
 Primeiramente, crie uma nova aplicação em https://apps.twitter.com/.
