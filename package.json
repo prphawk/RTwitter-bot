@@ -1,9 +1,9 @@
 {
-  "name": "essek-bot",
+  "name": "rtwitter-bot",
   "version": "1.0.1",
   "description": "A simple bot to retweet strings",
-  "repository": "https://github.com/prphawk/essek_bot",
-  "main": "index.js",
+  "repository": "https://github.com/prphawk/RTwitter-bot",
+  "main": "index.ts",
   "scripts": {
     "start": "node index.ts",
     "test": "jest"

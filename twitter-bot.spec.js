@@ -30,11 +30,13 @@ describe('Smoke Tests', () => {
         });
     });
 
+    /*
     describe('isReply', () => {
         it('should exist and be a function', () => {
             expect(typeof TwitterBot.isReply).toBe('function');
         });
     });
+    */
 
 })
 

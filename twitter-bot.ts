@@ -12,9 +12,10 @@ const Bot = new Twit({
 	timeout_ms: 60 * 1000,
 });
 
-const TWITTER_SEARCH_PHRASES = ['#DragonAge #Art'];
-const TWITTER_SEARCH_FILTERS = ['#dragonagecosplay', 'cosplay', 'sketch', 'wip', 'working', 'progress', 'nsfw']
+const TWITTER_SEARCH_PHRASES = ['#DragonAge'];
+const TWITTER_SEARCH_FILTERS = ['#DragonAgeCosplay']
 const TWITTER_MIN_FAVES = 200
+
 
 console.log('The bot is running...');
 
@@ -22,73 +23,113 @@ console.log('The bot is running...');
   console.log(data)
 }) */
 
+interface TweetFilterProps {
+	filterStrings?: boolean,
+	filterSensitiveContent?: boolean,
+	filterReplies?: boolean,
+	filterQuoteRetweets?: boolean,
+	filterNonMedia?: boolean,
+	
+}
+
 /* BotRetweet() : To retweet recent tweets with our query */
-function BotRetweet() {
+const RetweetStream = (props: TweetFilterProps) => {
 	const stream = Bot.stream('statuses/filter', {
 		track: TWITTER_SEARCH_PHRASES,
 	});
 
-	stream.on('tweet', tweet: Twitter.Status => {
-		if(!isReply(tweet) && tweet.entities.media) {
-			if(!tweet.possibly_sensitive) {
-				if(filteredTweet(tweet)) {
-					console.log('\n BOT HAS FILTERED:' + tweet.text + tweet.expanded_url)
-				} else console.warn('Bot retweeted : ' + tweet.text);
+	stream.on('tweet', tweet => {
+		if(!tweet.retweeted_status) {
+			if(containFilter(tweet, props)) {
+				console.warn('-> Bot has filtered:' + tweet.expanded_url + tweet.text)
+			} else {
+				Bot.post('statuses/retweet/:id', {
+					id: tweet.id_str
+				}, (error, response) => {
+					if (error) {
+						console.log('-> Bot could not retweet, : ' + error);
+					} else {
+						console.log('==> Bot retweeted : ' + response.text);
+					}
+				})
+			}
+		}
+	})
+} 
 
-			} 
-			/*
-			Bot.post('statuses/retweet/:id', {
-				id: tweet.id_str
-			}, (error, response) => {
-				if (error) {
-					console.log('Bot could not retweet, : ' + error);
-				} else {
-					console.log('Bot retweeted : ' + response.text);
-				}
-			});
-			 */
-		} 
-	});
-};
+const containFilter = (tweet, props: TweetFilterProps): boolean => {
 
-function filteredTweet(tweet) {
-	return TWITTER_SEARCH_FILTERS
-	.some(filter => 
-		tweet.text.toLowerCase()
-		.replace(/[^a-z]+/g, ' ')
-		.includes(filter))
+	const filteredString = (): boolean => {
+		if(props.filterStrings) {
+			return TWITTER_SEARCH_FILTERS
+			.some(filter => tweet.text.toLowerCase()
+				.replace(/[^a-z]+/g, ' ').includes(filter))
+		} return false
+	}
+
+	const filteredReply = (): boolean => {
+		if(props.filterReplies || props.filterQuoteRetweets) {
+			return tweet.in_reply_to_status_id_str || tweet.is_quote_status ? true : false
+		}
+	}
+
+	const filterSensitiveContent = (): boolean => {
+		return tweet.possibly_sensitive
+	}
+
+	const filterNonMedia = (): boolean => {
+		return tweet.entities.media.length === 0
+	}
+
+	return filteredString()
+	|| filteredReply() 
+	|| filterSensitiveContent() 
+	|| filterNonMedia()
 }
 
-function isReply(tweet) {
-	return tweet.retweeted_status 
-	|| tweet.in_reply_to_status_id_str
-	|| tweet.is_quote_status ? true : false
-}
 
-function hasMinFaves(tweet) {
-	return tweet.favorite_count >= TWITTER_MIN_FAVES ? true : false
-}
-
-function BotGetTweets() {
+const GetTweets = (props: TweetFilterProps) => {
 	Bot.get('search/tweets', 
 		{ 
-			q: `#DragonAge -#dragonagecosplay -cosplay -cosplaying -sketch -wip -working -progress -nsfw min_faves:${TWITTER_MIN_FAVES} filter:images until:2017-01-01`, 
-			count: 1000 
+			q: makeQuery(props), 
+			count: 100 
 		}, 
 		function(error, data, response) {
 			if (error) {
 				console.log('Bot could not retweet, : ' + error);
 			} else {
 				console.log(data.statuses)
-				console.log(`\n search_metadata: ${data.search_metadata.count} --------------------------------------------------------------------------------`)
+				console.log(`\n search_metadata: ${data.search_metadata.count} -------------------------------------------------`)
 			}
 		})
+}
+
+const makeQuery = (props:TweetFilterProps) => {
+
+	let strings = TWITTER_SEARCH_PHRASES
+
+	if(props.filterStrings) {
+		strings.concat(TWITTER_SEARCH_FILTERS.map(filter => '-' + filter))
+	}
+
+	let response = strings.join(' ')
+
+	if(props.filterNonMedia) {
+		response += ' filter:images'
+	}
+	if(props.filterQuoteRetweets) {
+		response += ' -filter:retweets'
+	}
+	if(props.filterReplies) {
+		response += ' -filter:replies'
+	}
+
+	return response
 }
 
 // Exports
 module.exports = {
     Bot,
-    BotRetweet,
-		isReply,
-		BotGetTweets,
+    BotRetweet: RetweetStream,
+		BotGetTweets: GetTweets,
 }
