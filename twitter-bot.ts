@@ -29,6 +29,7 @@ interface TweetFilterProps {
 	filterReplies?: boolean,
 	filterQuoteRetweets?: boolean,
 	filterNonMedia?: boolean,
+	minFaves?: number,
 	
 }
 
@@ -89,17 +90,19 @@ const containFilter = (tweet, props: TweetFilterProps): boolean => {
 
 
 const GetTweets = (props: TweetFilterProps) => {
+	const q = makeQuery(props)
 	Bot.get('search/tweets', 
 		{ 
-			q: makeQuery(props), 
-			count: 100 
+			q, count: 100 
 		}, 
 		function(error, data, response) {
 			if (error) {
 				console.log('Bot could not retweet, : ' + error);
 			} else {
+				console.log(`Searching results for queue: ${q}`)
 				console.log(data.statuses)
-				console.log(`\n search_metadata: ${data.search_metadata.count} -------------------------------------------------`)
+				console.log(`\n search_metadata: ${data.search_metadata.count} ${'-'.repeat(20)}`)
+				console.log(response)
 			}
 		})
 }
@@ -130,6 +133,6 @@ const makeQuery = (props:TweetFilterProps) => {
 // Exports
 module.exports = {
     Bot,
-    BotRetweet: RetweetStream,
-		BotGetTweets: GetTweets,
+    RetweetStream,
+		GetTweets,
 }

@@ -2,8 +2,8 @@ const TwitterBot = require('./twitter-bot.ts');
 
 // Initiate Bot
 function BotInit() {
-	TwitterBot.BotRetweet();
-	//TwitterBot.BotGetTweets()
+	TwitterBot.RetweetStream()
+	//TwitterBot.GetTweets()
 }
 
 BotInit();
