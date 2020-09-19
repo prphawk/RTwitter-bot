@@ -1,5 +1,9 @@
 const Twit = require('twit');
 
+import Constants from './constants/index'
+import TweetFilterProps from './helpers/props'
+import { containFilter , makeQuery } from './helpers/index'
+
 require('dotenv').config();
 
 /* Configure the Twitter API */
@@ -12,31 +16,15 @@ const Bot = new Twit({
 	timeout_ms: 60 * 1000,
 });
 
-const TWITTER_SEARCH_PHRASES = ['#DragonAge'];
-const TWITTER_SEARCH_FILTERS = ['#DragonAgeCosplay']
-const TWITTER_MIN_FAVES = 200
-
-
 console.log('The bot is running...');
 
-/*T.get('search/tweets', { q: 'banana since:2011-07-11', count: 100 }, function(err, data, response) {
-  console.log(data)
-}) */
-
-interface TweetFilterProps {
-	filterStrings?: boolean,
-	filterSensitiveContent?: boolean,
-	filterReplies?: boolean,
-	filterQuoteRetweets?: boolean,
-	filterNonMedia?: boolean,
-	minFaves?: number,
-	
-}
-
-/* BotRetweet() : To retweet recent tweets with our query */
+/**
+ * @description Faz stream, filter e retweet dos tweets recentes de acordo com uma query simples dada em (property) track.
+ * Na stream em tempo-real não tem como fazer uma filtragem tão extensa como na search, em que temos vários tipos de strings que definem condicionais  
+ */
 const RetweetStream = (props: TweetFilterProps) => {
 	const stream = Bot.stream('statuses/filter', {
-		track: TWITTER_SEARCH_PHRASES,
+		track: Constants.SEARCH_PHRASES,
 	});
 
 	stream.on('tweet', tweet => {
@@ -58,43 +46,10 @@ const RetweetStream = (props: TweetFilterProps) => {
 	})
 } 
 
-const containFilter = (tweet, props: TweetFilterProps): boolean => {
-
-	const filteredString = (): boolean => {
-		if(props.filterStrings) {
-			return TWITTER_SEARCH_FILTERS
-			.some(filter => tweet.text.toLowerCase()
-				.replace(/[^a-z]+/g, ' ').includes(filter))
-		} return false
-	}
-
-	const filteredReply = (): boolean => {
-		if(props.filterReplies || props.filterQuoteRetweets) {
-			return tweet.in_reply_to_status_id_str || tweet.is_quote_status ? true : false
-		}
-	}
-
-	const filterSensitiveContent = (): boolean => {
-		return tweet.possibly_sensitive
-	}
-
-	const filterNonMedia = (): boolean => {
-		return tweet.entities.media.length === 0
-	}
-
-	return filteredString()
-	|| filteredReply() 
-	|| filterSensitiveContent() 
-	|| filterNonMedia()
-}
-
-
 const GetTweets = (props: TweetFilterProps) => {
 	const q = makeQuery(props)
 	Bot.get('search/tweets', 
-		{ 
-			q, count: 100 
-		}, 
+		{ q, count: 100 }, 
 		function(error, data, response) {
 			if (error) {
 				console.log('Bot could not retweet, : ' + error);
@@ -105,29 +60,6 @@ const GetTweets = (props: TweetFilterProps) => {
 				console.log(response)
 			}
 		})
-}
-
-const makeQuery = (props:TweetFilterProps) => {
-
-	let strings = TWITTER_SEARCH_PHRASES
-
-	if(props.filterStrings) {
-		strings.concat(TWITTER_SEARCH_FILTERS.map(filter => '-' + filter))
-	}
-
-	let response = strings.join(' ')
-
-	if(props.filterNonMedia) {
-		response += ' filter:images'
-	}
-	if(props.filterQuoteRetweets) {
-		response += ' -filter:retweets'
-	}
-	if(props.filterReplies) {
-		response += ' -filter:replies'
-	}
-
-	return response
 }
 
 // Exports
