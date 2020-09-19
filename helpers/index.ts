@@ -17,21 +17,32 @@ import Constants from '../constants'
     }
 
     const filteredReply = (): boolean => {
-      if(props.filterReplies || props.filterQuoteRetweets) {
-        return tweet.in_reply_to_status_id_str || tweet.is_quote_status ? true : false
-      }
+      if(props.filterReplies) {
+        return tweet.in_reply_to_status_id_str ? true : false
+      } return false
+    }
+
+    const filteredQuote = (): boolean => {
+      if(props.filterQuoteRetweets) {
+        return tweet.is_quote_status
+      } return false
     }
 
     const filterSensitiveContent = (): boolean => {
-      return tweet.possibly_sensitive
+      if(props.filterSensitiveContent) {
+        return tweet.possibly_sensitive
+      } return false
     }
 
     const filterNonMedia = (): boolean => {
-      return tweet.entities.media.length === 0
+      if(props.filterNonMedia) {
+        return tweet.entities.media.length === 0
+      } return false
     }
 
     return filteredString()
     || filteredReply() 
+    || filteredQuote()
     || filterSensitiveContent() 
     || filterNonMedia()
   }

@@ -46,6 +46,9 @@ const RetweetStream = (props: TweetFilterProps) => {
 	})
 } 
 
+/**
+ * @description Faz busca filtrada de acordo com uma query construída por props.
+ */
 const GetTweets = (props: TweetFilterProps) => {
 	const q = makeQuery(props)
 	Bot.get('search/tweets', 
