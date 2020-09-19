@@ -1,10 +1,11 @@
 import TweetFilterProps from './props'
 import SearchParams from '../constants'
+import Twit from 'twit'
 
   /**
    * @description Define se o tweet é elegível para o retweet de acordo com seu props
    */
-  export const hasFilter = (tweet, props: TweetFilterProps): boolean => {
+  export const hasFilter = (tweet: Twit.Twitter.Status, props: TweetFilterProps): boolean => {
 
     const filteredString = (): boolean => {
       if(props.filterStrings) {
@@ -19,13 +20,14 @@ import SearchParams from '../constants'
     const filteredReply = (): boolean => {
       if(props.filterReplies) {
         console.log('\n-- in reply: ' + tweet.in_reply_to_status_id_str)
-        return tweet.in_reply_to_status_id_str
+        return tweet.in_reply_to_status_id_str !== undefined
       } return false
     }
 
     const filteredQuote = (): boolean => {
       if(props.filterQuoteRetweets) {
-        return tweet.is_quote_status
+        console.log("\n-- QUOTE STATUS: " + tweet.is_quote_status)
+        return tweet.is_quote_status !== undefined
       } return false
     }
 

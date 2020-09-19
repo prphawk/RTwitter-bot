@@ -26,10 +26,11 @@ const RetweetStream = (props: TweetFilterProps) => {
 		track: Params.PHRASES,
 	});
 
-	stream.on('tweet', tweet => {
+	stream.on('tweet', status => {
+		const tweet = status as Twit.Twitter.Status
 		if(!tweet.retweeted_status) {
 			if(hasFilter(tweet, props)) {
-				console.warn('-> Bot has filtered:' + tweet.expanded_url + tweet.text)
+				console.warn('-> Bot has filtered:' + tweet.full_text)
 			} else {
 				Bot.post('statuses/retweet/:id', {
 					id: tweet.id_str
