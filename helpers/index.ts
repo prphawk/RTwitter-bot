@@ -1,14 +1,14 @@
 import TweetFilterProps from './props'
-import Constants from '../constants'
+import SearchParams from '../constants'
 
   /**
    * @description Define se o tweet é elegível para o retweet de acordo com seu props
    */
-  export const containFilter = (tweet, props: TweetFilterProps): boolean => {
+  export const hasFilter = (tweet, props: TweetFilterProps): boolean => {
 
     const filteredString = (): boolean => {
       if(props.filterStrings) {
-        return Constants.SEARCH_FILTERS
+        return SearchParams.FILTERS
         .some(filter => tweet.text.toLowerCase()
           .replace(/[^a-z]+/g, ' ')
           .includes(filter
@@ -18,7 +18,8 @@ import Constants from '../constants'
 
     const filteredReply = (): boolean => {
       if(props.filterReplies) {
-        return tweet.in_reply_to_status_id_str ? true : false
+        console.log('\n-- in reply: ' + tweet.in_reply_to_status_id_str)
+        return tweet.in_reply_to_status_id_str
       } return false
     }
 
@@ -40,11 +41,11 @@ import Constants from '../constants'
       } return false
     }
 
-    return filteredString()
-    || filteredReply() 
+    return filteredReply() 
     || filteredQuote()
     || filterSensitiveContent() 
     || filterNonMedia()
+    || filteredString()
   }
 
   /**
@@ -52,10 +53,10 @@ import Constants from '../constants'
    */
   export const makeQuery = (props:TweetFilterProps) => {
 
-    let strings = Constants.SEARCH_PHRASES
+    let strings = SearchParams.PHRASES
 
     if(props.filterStrings) {
-      strings.concat(Constants.SEARCH_FILTERS.map(filter => '-' + filter))
+      strings.concat(SearchParams.FILTERS.map(filter => '-' + filter))
     }
 
     let response = strings.join(' ')
