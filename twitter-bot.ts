@@ -26,22 +26,24 @@ const RetweetStream = (props: TweetFilterProps) => {
 		track: Params.PHRASES,
 	});
 
-	stream.on('tweet', status => {
-		const tweet = status as Twit.Twitter.Status
+	stream.on('tweet', (tweet: Twit.Twitter.Status) => {
 		if(!tweet.retweeted_status) {
 			if(hasFilter(tweet, props)) {
 				console.warn('-> Bot has filtered:' + tweet.full_text)
 			} else {
+				/*
 				Bot.post('statuses/retweet/:id', {
 					id: tweet.id_str
-				}, (error, response) => {
+				}, (error, response: Twit.Twitter.Status) => {
 					if (error) {
-						console.log('-> Bot could not retweet, : ' + error);
+						console.warn('-> Bot could not retweet: ' + error.message);
 					} else {
-						console.log('==> Bot retweeted : \n');
-						console.log(response.text)
+						console.log(`==> Bot retweeted : ${response.text} \n`);
+						console.log(response)
 					}
 				})
+				*/
+				console.log(`==> Bot WOULD retweeted : ${tweet.full_text} \n`);
 			}
 		}
 	})

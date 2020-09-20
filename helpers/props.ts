@@ -5,5 +5,5 @@ export default interface TweetFilterProps {
 	filterQuoteRetweets?: boolean,
 	filterNonMedia?: boolean,
 	filterMinFaves?: number,
-	
+	filterUserIds?: boolean,
 }

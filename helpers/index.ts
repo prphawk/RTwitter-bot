@@ -7,8 +7,15 @@ import Twit from 'twit'
    */
   export const hasFilter = (tweet: Twit.Twitter.Status, props: TweetFilterProps): boolean => {
 
+    const filteredUser = (): boolean => {
+      if(props.filterUserIds && SearchParams.DONT_RT_USER_IDS.length > 0) {
+        return SearchParams.DONT_RT_USER_IDS
+        .some(filter => tweet.user.id_str === filter)
+      } return false
+    }
+
     const filteredString = (): boolean => {
-      if(props.filterStrings) {
+      if(props.filterStrings && SearchParams.FILTERS.length > 0) {
         return SearchParams.FILTERS
         .some(filter => tweet.text.toLowerCase()
           .replace(/[^a-z]+/g, ' ')
@@ -47,6 +54,7 @@ import Twit from 'twit'
     || filteredQuote()
     || filterSensitiveContent() 
     || filterNonMedia()
+    || filteredUser()
     || filteredString()
   }
 
