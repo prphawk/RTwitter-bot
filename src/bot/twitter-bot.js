@@ -1,12 +1,12 @@
 import Twit from 'twit'
-import Params from './constants/index'
-import TweetFilterProps from './helpers/props'
-import { hasFilter , makeQuery } from './helpers/index'
+import Params from '../params/index.js'
+import { hasFilter , makeQuery } from '../helpers/index.js'
+import Dotenv from 'dotenv'
 
-require('dotenv').config();
+Dotenv.config();
 
 /* Configure the Twitter API */
-const Bot = new Twit({
+export const Bot = new Twit({
 	consumer_key: process.env.CONSUMER_KEY,
 	consumer_secret: process.env.CONSUMER_SECRET,
 	access_token: process.env.ACCESS_TOKEN,
@@ -15,21 +15,21 @@ const Bot = new Twit({
 	timeout_ms: 60 * 1000,
 });
 
-console.log('The bot is running...');
+console.log('The bot is running on port ' + (process.env.PORT || 3000));
 
 /**
  * @description Faz stream, filter e retweet dos tweets recentes de acordo com uma query simples dada em `track`.
  * Na stream em tempo-real não tem como fazer uma filtragem tão extensa como na search, em que temos vários tipos de strings que definem condicionais  
  */
-const RetweetStream = (props: TweetFilterProps) => {
+export const RetweetStream = (props) => {
 	const stream = Bot.stream('statuses/filter', {
 		track: Params.PHRASES,
 	});
 
-	stream.on('tweet', (tweet: Twit.Twitter.Status) => {
+	stream.on('tweet', (tweet) => {
 		if(!tweet.retweeted_status) {
 			if(hasFilter(tweet, props)) {
-				console.warn('-> Bot has filtered:' + tweet.full_text)
+				console.log(`-- Bot has filtered: ${tweet.text} \n`)
 			} else {
 				/*
 				Bot.post('statuses/retweet/:id', {
@@ -43,7 +43,7 @@ const RetweetStream = (props: TweetFilterProps) => {
 					}
 				})
 				*/
-				console.log(`==> Bot WOULD retweeted : ${tweet.full_text} \n`);
+				console.log(`==> Bot WOULD retweet : ${tweet.text} \n`);
 			}
 		}
 	})
@@ -52,14 +52,14 @@ const RetweetStream = (props: TweetFilterProps) => {
 /**
  * @description Faz busca filtrada de acordo com uma query construída por props.
  */
-const GetTweets = (props: TweetFilterProps) => {
+export const GetTweets = (props) => {
 	const q = makeQuery(props)
 	console.log(`Searching results for queue: ${q}`)
 	Bot.get('search/tweets', 
 		{ 
 			q, count: 100 
 		}, 
-		(error, data: Twit.Twitter.SearchResults, response) => {
+		(error, data, response) => {
 			if (error) {
 				console.log('Bot could not retweet, : ' + error);
 			} else {
@@ -68,11 +68,4 @@ const GetTweets = (props: TweetFilterProps) => {
 				console.log(response)
 			}
 		})
-}
-
-// Exports
-module.exports = {
-    Bot,
-    RetweetStream,
-		GetTweets,
 }

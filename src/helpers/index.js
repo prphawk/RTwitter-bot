@@ -1,20 +1,18 @@
-import TweetFilterProps from './props'
-import SearchParams from '../constants'
-import Twit from 'twit'
+import SearchParams from '../params/index.js'
 
   /**
    * @description Define se o tweet é elegível para o retweet de acordo com seu props
    */
-  export const hasFilter = (tweet: Twit.Twitter.Status, props: TweetFilterProps): boolean => {
+  export const hasFilter = (tweet, props) => {
 
-    const filteredUser = (): boolean => {
+    const filteredUser = () => {
       if(props.filterUserIds && SearchParams.DONT_RT_USER_IDS.length > 0) {
         return SearchParams.DONT_RT_USER_IDS
         .some(filter => tweet.user.id_str === filter)
       } return false
     }
 
-    const filteredString = (): boolean => {
+    const filteredString = () => {
       if(props.filterStrings && SearchParams.FILTERS.length > 0) {
         return SearchParams.FILTERS
         .some(filter => tweet.text.toLowerCase()
@@ -24,27 +22,25 @@ import Twit from 'twit'
       } return false
     }
 
-    const filteredReply = (): boolean => {
+    const filteredReply = () => {
       if(props.filterReplies) {
-        console.log('\n-- in reply: ' + tweet.in_reply_to_status_id_str)
-        return tweet.in_reply_to_status_id_str !== undefined
+        return tweet.in_reply_to_status_id_str !== null
       } return false
     }
 
-    const filteredQuote = (): boolean => {
+    const filteredQuote = () => {
       if(props.filterQuoteRetweets) {
-        console.log("\n-- QUOTE STATUS: " + tweet.is_quote_status)
-        return tweet.is_quote_status !== undefined
+        return tweet.is_quote_status
       } return false
     }
 
-    const filterSensitiveContent = (): boolean => {
+    const filterSensitiveContent = () => {
       if(props.filterSensitiveContent) {
         return tweet.possibly_sensitive
       } return false
     }
 
-    const filterNonMedia = (): boolean => {
+    const filterNonMedia = () => {
       if(props.filterNonMedia) {
         return tweet.entities.media.length === 0
       } return false
@@ -61,7 +57,7 @@ import Twit from 'twit'
   /**
    * @description Define string de query search de acordo com seu props
    */
-  export const makeQuery = (props:TweetFilterProps) => {
+  export const makeQuery = (props) => {
 
     let strings = SearchParams.PHRASES
 

@@ -3,14 +3,15 @@
   "version": "1.0.1",
   "description": "A simple bot to retweet strings",
   "repository": "https://github.com/prphawk/RTwitter-bot",
-  "main": "index.ts",
+  "main": "src/index.js",
+  "type": "module",
   "scripts": {
-    "start": "node index.ts",
+    "start": "node src/index.js",
     "test": "jest"
   },
   "author": "Mayra Camargo Cademartori",
   "dependencies": {
-    "dotenv": "^6.0.0",
+    "dotenv": "^6.2.0",
     "twit": "^2.2.10"
   },
   "devDependencies": {
