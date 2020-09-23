@@ -11,7 +11,7 @@ import { RetweetStream } from './bot/twitter-bot.js'
 } */
 
 // Initiate Bot
-function BotInit() {
+export default function BotInit() {
 
 	RetweetStream({
 		filterUserIds: true,
@@ -24,6 +24,3 @@ function BotInit() {
 
 BotInit();
 
-export default {
-	BotInit,
-};

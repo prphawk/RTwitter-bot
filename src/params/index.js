@@ -6,7 +6,7 @@ class SearchParams {
   /**
    * @description O que procuramos
    */
-  PHRASES = ['Teste']
+  PHRASES = ['Teste', 'Among Us']
 
   /**
   * @description O que tiramos
