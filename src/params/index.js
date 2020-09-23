@@ -6,12 +6,12 @@ class SearchParams {
   /**
    * @description O que procuramos
    */
-  PHRASES = ['Teste', 'Among Us']
+  PHRASES = ['i miss essek', 'i miss essik', 'i miss the shadowhand', 'when will essek return', 'missing essek hours']
 
   /**
   * @description O que tiramos
   */
-  FILTERS = ['JEON']
+  FILTERS = []
 
   /**
   * @description Não retweetamos destes users

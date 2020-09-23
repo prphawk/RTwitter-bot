@@ -31,19 +31,15 @@ export const RetweetStream = (props) => {
 			if(hasFilter(tweet, props)) {
 				console.log(`-- Bot has filtered: ${tweet.text} \n`)
 			} else {
-				/*
 				Bot.post('statuses/retweet/:id', {
 					id: tweet.id_str
-				}, (error, response: Twit.Twitter.Status) => {
+				}, (error, response) => {
 					if (error) {
 						console.warn('-> Bot could not retweet: ' + error.message);
 					} else {
 						console.log(`==> Bot retweeted : ${response.text} \n`);
-						console.log(response)
 					}
 				})
-				*/
-				console.log(`==> Bot WOULD retweet : ${tweet.text} \n`);
 			}
 		}
 	})
