@@ -6,19 +6,18 @@ class SearchParams {
   /**
    * @description O que procuramos
    */
-  PHRASES = ['Teste', 'Among Us']
+  PHRASES = ['Test', 'Among Us']
 
   /**
   * @description O que tiramos
   */
-  FILTERS = ['JEON']
+  FILTERS = ["Some word/phrase you don't want to see retweeted"]
 
   /**
   * @description Não retweetamos destes users
   */
   DONT_RT_USER_IDS = [
-    '1069976807540183040', //@swordsoprano
-    '1116850367835377664', //@wlwjester
+    '0000000000000000000', //@user
   ]
 
   MIN_FAVES = 200

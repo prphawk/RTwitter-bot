@@ -14,9 +14,9 @@ import { RetweetStream } from './bot/twitter-bot.js'
 export default function BotInit() {
 
 	RetweetStream({
-		filterUserIds: true,
-		filterReplies: true,
-		filterQuoteRetweets: true,
+		filterUserIds, 
+		filterReplies,
+		filterQuoteRetweets,
 	})
 
 	//TwitterBot.GetTweets()
