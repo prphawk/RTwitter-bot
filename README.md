@@ -24,3 +24,5 @@ Existe um Procfile configurado para este bot funcionar como um worker no heroku.
 A versão gratuita atende bem, dependendo do volume de webhooks recebidos.
 
 As chaves devem ser inseridas como variáveis de configuração no Heroku.
+
+Você pode ver o log do deploy através do comando "heroku logs --tail -a <heroku application name>" 
