@@ -19,6 +19,8 @@ class SearchParams {
   DONT_RT_USER_IDS = [
     '1069976807540183040', //@swordsoprano
     '1116850367835377664', //@wlwjester
+    '378362899', //@Sleebers -> por crimes de caleb/nott
+    '1305319579170766856', //@i_miss_essek
   ]
 
   MIN_FAVES = 200
