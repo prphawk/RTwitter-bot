@@ -67,3 +67,5 @@ typings/
 .serverless
 .vscode/launch.json
 .DS_Store
+
+dist
