@@ -1,13 +1,14 @@
-import SearchParams from '../params/index.js'
+import params from '../../params/index'
+import FilterProps from '../../types/FilterProps'
 
   /**
    * @description Define se o tweet é elegível para o retweet de acordo com seu props
    */
-  export const isFilterBlocked = (tweet, props) => {
+  export const isFilterBlocked = (tweet, props: FilterProps) => {
 
-    const filterUser = () => SearchParams.DONT_RT_USER_IDS.some(filter => tweet.user.id_str === filter)
+    const filterUser = () => params.DONT_RT_FROM.some(filter => tweet.user.id_str === filter)
 
-    const filteredString = () => SearchParams.FILTERS
+    const filteredString = () => params.FILTERS
     .some(filter => tweet.text.toLowerCase()
     .replace(/[^a-z]+/g, ' ')
     .includes(filter.toLowerCase()))
@@ -25,8 +26,8 @@ import SearchParams from '../params/index.js'
       { prop: props.filterQuoteRetweets, foo: filterQuote },
       { prop: props.filterSensitiveContent, foo: filterSensitiveContent },
       { prop: props.filterNonMedia, foo: filterNonMedia },
-      { prop: props.filterUserIds && SearchParams.DONT_RT_USER_IDS.length > 0 , foo: filterUser },
-      { prop: props.filterStrings && SearchParams.FILTERS.length > 0, foo: filteredString },
+      { prop: props.filterUserIds && params.DONT_RT_FROM.length > 0 , foo: filterUser },
+      { prop: props.filterStrings && params.FILTERS.length > 0, foo: filteredString },
     ] 
 
     return filters.some(f => f.prop && f.foo())
@@ -37,10 +38,10 @@ import SearchParams from '../params/index.js'
    */
   export const makeQuery = (props) => {
 
-    let strings = SearchParams.PHRASES
+    let strings = params.PHRASES
 
     if(props.filterStrings) {
-      strings.concat(SearchParams.FILTERS.map(filter => '-' + filter))
+      strings.push(...params.FILTERS.map(filter => '-' + filter))
     }
 
     let response = strings.join(' ')
