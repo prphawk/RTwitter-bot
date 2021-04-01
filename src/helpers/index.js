@@ -3,55 +3,33 @@ import SearchParams from '../params/index.js'
   /**
    * @description Define se o tweet é elegível para o retweet de acordo com seu props
    */
-  export const hasFilter = (tweet, props) => {
+  export const isFilterBlocked = (tweet, props) => {
 
-    const filteredUser = () => {
-      if(props.filterUserIds && SearchParams.DONT_RT_USER_IDS.length > 0) {
-        return SearchParams.DONT_RT_USER_IDS
-        .some(filter => tweet.user.id_str === filter)
-      } return false
-    }
+    const filterUser = () => SearchParams.DONT_RT_USER_IDS.some(filter => tweet.user.id_str === filter)
 
-    const filteredString = () => {
-      if(props.filterStrings && SearchParams.FILTERS.length > 0) {
-        return SearchParams.FILTERS
-        .some(filter => tweet.text.toLowerCase()
-          .replace(/[^a-z]+/g, ' ')
-          .includes(filter
-          .toLowerCase()))
-      } return false
-    }
+    const filteredString = () => SearchParams.FILTERS
+    .some(filter => tweet.text.toLowerCase()
+    .replace(/[^a-z]+/g, ' ')
+    .includes(filter.toLowerCase()))
 
-    const filteredReply = () => {
-      if(props.filterReplies) {
-        return tweet.in_reply_to_status_id_str !== null
-      } return false
-    }
+    const filteredReply = () => tweet.in_reply_to_status_id_str !== null
 
-    const filteredQuote = () => {
-      if(props.filterQuoteRetweets) {
-        return tweet.is_quote_status
-      } return false
-    }
+    const filterQuote = () => tweet.is_quote_status
 
-    const filterSensitiveContent = () => {
-      if(props.filterSensitiveContent) {
-        return tweet.possibly_sensitive
-      } return false
-    }
+    const filterSensitiveContent = () => tweet.possibly_sensitive
 
-    const filterNonMedia = () => {
-      if(props.filterNonMedia) {
-        return tweet.entities.media.length === 0
-      } return false
-    }
+    const filterNonMedia = () => tweet.entities.media.length === 0
 
-    return filteredReply() 
-    || filteredQuote()
-    || filterSensitiveContent() 
-    || filterNonMedia()
-    || filteredUser()
-    || filteredString()
+    const filters = [ 
+      { prop: props.filterReplies , foo: filteredReply },
+      { prop: props.filterQuoteRetweets, foo: filterQuote },
+      { prop: props.filterSensitiveContent, foo: filterSensitiveContent },
+      { prop: props.filterNonMedia, foo: filterNonMedia },
+      { prop: props.filterUserIds && SearchParams.DONT_RT_USER_IDS.length > 0 , foo: filterUser },
+      { prop: props.filterStrings && SearchParams.FILTERS.length > 0, foo: filteredString },
+    ] 
+
+    return filters.some(f => f.prop && f.foo())
   }
 
   /**

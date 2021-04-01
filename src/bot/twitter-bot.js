@@ -1,6 +1,6 @@
 import Twit from 'twit'
 import Params from '../params/index.js'
-import { hasFilter , makeQuery } from '../helpers/index.js'
+import { isFilterBlocked , makeQuery } from '../helpers/index.js'
 import Dotenv from 'dotenv'
 
 Dotenv.config();
@@ -15,53 +15,27 @@ export const Bot = new Twit({
 	timeout_ms: 60 * 1000,
 });
 
-console.log('The bot is running on port ' + (process.env.PORT || 3000));
+console.log('Running on port ' + (process.env.PORT || 3000));
 
 /**
  * @description Faz stream, filter e retweet dos tweets recentes de acordo com uma query simples dada em `track`.
  * Na stream em tempo-real não tem como fazer uma filtragem tão extensa como na search, em que temos vários tipos de strings que definem condicionais  
  */
 export const RetweetStream = (props) => {
-	const stream = Bot.stream('statuses/filter', {
-		track: Params.PHRASES,
-	});
+	const stream = Bot.stream('statuses/filter', { track: Params.PHRASES })
 
 	stream.on('tweet', (tweet) => {
 		if(!tweet.retweeted_status) {
-			if(hasFilter(tweet, props)) {
-				console.log(`-- Bot has filtered: ${tweet.text} \n`)
+			if(isFilterBlocked(tweet, props)) {
+				console.log(`-> Bot has filtered: ${tweet.text}`)
 			} else {
 				Bot.post('statuses/retweet/:id', {
 					id: tweet.id_str
-				}, (error, response) => {
-					if (error) {
-						console.warn('-> Bot could not retweet: ' + error.message);
-					} else {
-						console.log(`==> Bot retweeted : ${response.text} \n`);
-					}
-				})
+				}, (error, response) => console.log(error ? 
+						(`-> Bot could not retweet: ${error.message}`) 
+						: (`=> Bot retweeted: ${response.text}`))
+				)
 			}
 		}
 	})
-} 
-
-/**
- * @description Faz busca filtrada de acordo com uma query construída por props.
- */
-export const GetTweets = (props) => {
-	const q = makeQuery(props)
-	console.log(`Searching results for queue: ${q}`)
-	Bot.get('search/tweets', 
-		{ 
-			q, count: 100 
-		}, 
-		(error, data, response) => {
-			if (error) {
-				console.log('Bot could not retweet, : ' + error);
-			} else {
-				console.log(data.statuses)
-				console.log(`\n search_metadata: ${data.search_metadata.count} ${'-'.repeat(20)}`)
-				console.log(response)
-			}
-		})
 }
