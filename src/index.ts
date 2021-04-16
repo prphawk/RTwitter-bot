@@ -1,11 +1,10 @@
 import RtStream from './service/stream/RetweetService'
 
-// Initiate Bot
-export default function BotInit() {
-
+function BotInit() {
 	RtStream({
 		filterUserIds: true, 
 		filterReplies: true,
+		filterStrings: true,
 		filterQuoteRetweets: true,
 	})
 }

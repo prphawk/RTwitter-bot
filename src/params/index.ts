@@ -7,7 +7,6 @@
    * @description O que procuramos
    */
   PHRASES = [
-    'test',
     'i miss essek', 
     'i miss essik', 
     'missing essek hours',

@@ -14,12 +14,9 @@ import { Twitter } from "twit"
 
 	stream.on('tweet', (tweet: Twitter.Status) => {
 		if(!tweet.retweeted_status) {
-			if(isFilterBlocked(tweet, props)) {
-				console.log(`-> Bot has filtered: ${tweet.text}`)
-			} else {
-				//Retweet(tweet.id_str)
-				console.log(`\n=> ${tweet.text}`)
-			}
+			isFilterBlocked(tweet, props) 
+				?	console.log(`-> Bot has filtered: ${tweet.text}`)
+				: Retweet(tweet.id_str)
 		}
 	})
 }
@@ -27,9 +24,9 @@ import { Twitter } from "twit"
 const Retweet = (id: string) => {
 		Bot.post('statuses/retweet/:id', { id },
 		(err, data) => {
-			console.log(err ? 
-				(`-> Bot could not retweet: ${err.message}`) 
-				: (`=> Bot retweeted: ${data}`))
+			console.log(err 
+				? `-> Bot could not retweet: ${err.message}`
+				: `=> Bot retweeted: ${data}`)
 		})
 }
 
