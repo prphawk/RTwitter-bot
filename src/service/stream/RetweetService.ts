@@ -12,13 +12,13 @@ import { Twitter } from "twit"
 
 	const stream = Bot.stream('statuses/filter', { track: SearchParams.PHRASES })
 
-	stream.on('tweet', (tweet) => {
+	stream.on('tweet', (tweet: Twitter.Status) => {
 		if(!tweet.retweeted_status) {
 			if(isFilterBlocked(tweet, props)) {
 				console.log(`-> Bot has filtered: ${tweet.text}`)
 			} else {
 				//Retweet(tweet.id_str)
-				console.log(`\n-> ${tweet.text || tweet.full_text}`)
+				console.log(`\n=> ${tweet.text}`)
 			}
 		}
 	})

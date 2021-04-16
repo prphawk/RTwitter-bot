@@ -1,10 +1,11 @@
+import { Twitter } from 'twit'
 import params from '../../params/index'
 import FilterProps from '../../types/FilterProps'
 
   /**
    * @description Define se o tweet é elegível para o retweet de acordo com seu props
    */
-  export const isFilterBlocked = (tweet, props: FilterProps) => {
+  export const isFilterBlocked = (tweet: Twitter.Status, props: FilterProps) => {
 
     const filterUser = () => params.DONT_RT_FROM.some(filter => tweet.user.id_str === filter)
 
@@ -31,30 +32,4 @@ import FilterProps from '../../types/FilterProps'
     ] 
 
     return filters.some(f => f.prop && f.foo())
-  }
-
-  /**
-   * @description Define string de query search de acordo com seu props
-   */
-  export const makeQuery = (props) => {
-
-    let strings = params.PHRASES
-
-    if(props.filterStrings) {
-      strings.push(...params.FILTERS.map(filter => '-' + filter))
-    }
-
-    let response = strings.join(' ')
-
-    if(props.filterNonMedia) {
-      response += ' filter:images'
-    }
-    if(props.filterQuoteRetweets) {
-      response += ' -filter:retweets'
-    }
-    if(props.filterReplies) {
-      response += ' -filter:replies'
-    }
-
-    return response
   }
