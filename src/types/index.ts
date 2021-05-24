@@ -1,8 +1,10 @@
 export default interface FilterProps {
-	filterStrings?: boolean,
-	filterSensitiveContent?: boolean,
-	filterReplies?: boolean,
-	filterQuoteRetweets?: boolean,
-	filterNonMedia?: boolean,
+	label?: string,
+	track: string | string[] 
 	filterUserIds?: boolean,
+	filterStrings?: boolean,
+	filterReplies?: boolean,
+	filterNonMedia?: boolean,
+	filterQuoteRetweets?: boolean,
+	filterSensitiveContent?: boolean,
 }
