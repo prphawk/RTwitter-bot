@@ -3,6 +3,7 @@ import RtStream from './service'
 
 function BotInit() {
 
+	console.log("oi")
 	RtStream({
 		label: "MISS",
 		track: Params.PHRASES__MISS,
@@ -11,6 +12,7 @@ function BotInit() {
 		filterStrings: true,
 		filterQuoteRetweets: true,
 	})
+	console.log("oi")
 }
 
 BotInit()

@@ -6,8 +6,8 @@
   "main": "dist/index.js",
   "scripts": {
     "prestart": "yarn tsc",
-    "preart": "npm build",
-    "premiss": "npm build",
+    "preart": "yarn build",
+    "premiss": "yarn build",
     "art": "node dist/art.js",
     "miss": "node dist/miss.js",
     "build": "yarn tsc",
