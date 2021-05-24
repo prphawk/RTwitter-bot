@@ -3,7 +3,7 @@ import RtStream from './service'
 
 function BotInit() {
 
-	console.log("oi")
+	console.log("Now streaming...")
 	RtStream({
 		label: "MISS",
 		track: Params.PHRASES__MISS,
@@ -12,7 +12,6 @@ function BotInit() {
 		filterStrings: true,
 		filterQuoteRetweets: true,
 	})
-	console.log("oi")
 }
 
 BotInit()

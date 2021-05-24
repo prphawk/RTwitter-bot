@@ -3,6 +3,7 @@ import RtStream from './service'
 
 function BotInit() {
 
+  console.log("Now streaming...")
 	RtStream({
 		label: "ART",
 		track: Params.PHRASES__ART,
