@@ -1,1 +1,1 @@
-miss: yarn miss
+miss: node dist/miss.js
