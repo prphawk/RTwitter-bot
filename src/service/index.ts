@@ -14,17 +14,17 @@ import { Twitter } from "twit"
 		if(!tweet.retweeted_status) {
 			isFilterBlocked(tweet, props) 
 				?	console.log(`-> Bot [${props.label}] has filtered: ${tweet.text}`)
-				: console.log(`=> Bot [${props.label}] would retweet: ${tweet.text}`)//Retweet(tweet.id_str)
+				: Retweet(tweet.id_str, props.label)
 		}
 	})
 }
 
-const Retweet = (id: string) => {
+const Retweet = (id: string, label?: string) => {
 		Bot.post('statuses/retweet/:id', { id },
 		(err, data) => {
 			console.log(err 
-				? `-> Bot could not retweet: ${err.message}`
-				: `=> Bot retweeted: ${data}`)
+				? `-> Bot [${label}] could not retweet: ${err.message}`
+				: `=> Bot [${label}] retweeted: ${data}`)
 		})
 }
 
