@@ -9,8 +9,14 @@ const Bot = new Twit({
 	consumer_secret: process.env.CONSUMER_SECRET,
 	access_token: process.env.ACCESS_TOKEN,
 	access_token_secret: process.env.ACCESS_TOKEN_SECRET,
-	timeout_ms: 60 * 60 * 60 * 1000,
 })
+
+export const Params = {
+	PHRASES__MISS: process.env.PHRASES__MISS.split(", "),
+	PHRASES__ART: process.env.PHRASES__ART.split(", "),
+	DONT_RT_FROM: process.env.DONT_RT_FROM.split(", "),
+	FILTERS: process.env.FILTERS.split(", "),
+} 
 
 export default Bot
 
