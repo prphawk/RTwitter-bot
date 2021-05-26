@@ -35,12 +35,9 @@ export const isFilterBlocked = (tweet: Tweet, props: FilterProps) => {
 
   const evalQuoteRt = () => tweet.is_quote_status
   const evalSensitiveContent = () => tweet.possibly_sensitive
-  const evalNonMedia = () => {
-    console.log(tweet.entities.media === undefined, tweet.entities)
-    return false
-  }
   const evalReply = () => tweet.in_reply_to_status_id_str !== null
   const evalUser = () => Params.DONT_RT_FROM.some(filter => tweet.user.id_str === filter)
+  const evalNonMedia = () => tweet.entities.media === undefined && tweet.entities.urls.length === 0
   const evalPhrase = () => Params.FILTERS.some(filter => tweet.text.toLowerCase().replace(/[^a-z]+/g,' ').includes(filter.toLowerCase()))
 
   const filters: filter[] = [
