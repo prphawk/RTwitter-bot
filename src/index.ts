@@ -11,7 +11,19 @@ function BotInit() {
 			nonMedia: true,
 		}
 	})
-	console.log("Now streaming...")
+	console.log("Now streaming ART...")
+
+	RtStream({
+		label: "MISS",
+		track: Params.PHRASES__MISS,
+		filters: {
+			user: true, 
+			reply: true,
+			phrase: true,
+			quoteRt: true,
+		}
+	})
+	console.log("Now streaming MISS...")
 }
 
 BotInit()

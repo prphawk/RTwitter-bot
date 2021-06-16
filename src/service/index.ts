@@ -31,7 +31,9 @@ interface filter { prop: boolean, foo: () => boolean | string }
 /**
  * @description Define se o tweet é elegível para o retweet de acordo com seu props
  */
-export const isFilterBlocked = (tweet: Tweet, props: FilterProps) => {
+export const isFilterBlocked = (tweet: Tweet, props?: FilterProps) => {
+
+  if(props === undefined) return false
 
   const evalQuoteRt = () => tweet.is_quote_status
   const evalSensitiveContent = () => tweet.possibly_sensitive
