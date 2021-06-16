@@ -1,10 +1,18 @@
-export default interface FilterProps {
-	label?: string,
+import { Twitter } from "twit"
+
+export default interface BotConfigProps {
 	track: string | string[] 
-	filterUserIds?: boolean,
-	filterStrings?: boolean,
-	filterReplies?: boolean,
-	filterNonMedia?: boolean,
-	filterQuoteRetweets?: boolean,
-	filterSensitiveContent?: boolean,
+	label?: string,
+	filters?: FilterProps
 }
+
+export interface FilterProps {
+	user?: boolean,
+	phrase?: boolean,
+	reply?: boolean,
+	nonMedia?: boolean,
+	quoteRt?: boolean,
+	sensitiveContent?: boolean,
+}
+
+export interface Tweet extends Twitter.Status {}
